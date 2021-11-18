@@ -1,47 +1,36 @@
 import "./App.css";
 import Animal from "./components/Animal";
-import { useState } from "react";
+import Filter from "./components/Filter";
+import React, { useState } from "react";
 import { animalsClean } from "./modules/animals";
 
 function App() {
   const [displayList, setDisplayList] = useState(animalsClean);
-
   const animalsMap = displayList.map((animal) => <Animal key={animal.id} {...animal} />);
 
-  function Filter() {
-    function filterClick(e) {
-      const theFilter = e.currentTarget.dataset.filter;
+  function sorting() {
+    setDisplayList([...animalsClean].sort(sortByName));
+  }
 
-      setDisplayList(theFilter === "*" ? animalsClean : animalsClean.filter((animal) => animal.type === theFilter));
+  function sortByName(a, b) {
+    if (a.animalName > b.animalName) {
+      return 1;
+    } else {
+      return -1;
     }
-
-    return (
-      <p>
-        Filter:
-        <button className="filter" data-action="filter" data-filter="cat" onClick={filterClick}>
-          Only Cats
-        </button>
-        <button className="filter" data-action="filter" data-filter="dog" onClick={filterClick}>
-          Only Dogs
-        </button>
-        <button className="filter" data-action="filter" data-filter="*" onClick={filterClick}>
-          all
-        </button>
-      </p>
-    );
   }
 
   return (
     <>
       <h1>Animals</h1>
-      <Filter />
+      <Filter myFunction={(theFilter) => setDisplayList(theFilter === "*" ? animalsClean : animalsClean.filter((animal) => animal.type === theFilter))} />
       <table id="list">
         <thead>
           <tr>
             <th data-action="sort" data-sort-direction="asc" data-sort="star">
               ⭐
             </th>
-            <th data-action="sort" data-sort-direction="asc" data-sort="name">
+            <th data-action="sort" data-sort-direction="asc" data-sort="name" onClick={sorting}>
               Name
             </th>
             <th data-action="sort" data-sort-direction="asc" data-sort="type">

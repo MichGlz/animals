@@ -26,16 +26,12 @@ const animals = [
 ];
 
 export const animalsClean = animals.map((animal) => {
-  let starB = false;
   return {
     animalName: animal.fullname.split(" ")[0],
     type: animal.fullname.split(" ").at(-1),
     desc: animal.fullname.split(" ")[2],
     age: animal.age,
-    id: animals.indexOf(animal) + 1,
-    star: starB,
-    clickStar: function () {
-      starB = !starB;
-    },
+    id: "animal" + (animals.indexOf(animal) + 1),
+    star: false,
   };
 });

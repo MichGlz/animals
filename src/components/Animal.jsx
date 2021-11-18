@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 export default function Animal(props) {
   const localStar = localStorage.getItem(`star${props.id}`);
   const starBoolean = localStar ? JSON.parse(localStar) : false;
