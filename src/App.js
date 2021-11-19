@@ -5,25 +5,51 @@ import React, { useState } from "react";
 import { animalsClean } from "./modules/animals";
 
 function App() {
-  const [displayList, setDisplayList] = useState(animalsClean);
-  const animalsMap = displayList.map((animal) => <Animal key={animal.id} {...animal} />);
+  const [upDateAnimalsClean, setUpDateAnimalsClean] = useState(animalsClean);
+  const [displayList, setDisplayList] = useState(upDateAnimalsClean);
 
-  function sorting() {
-    setDisplayList([...animalsClean].sort(sortByName));
+  function filterClick(e) {
+    const theFilter = e.currentTarget.dataset.filter;
+
+    setDisplayList(theFilter === "*" ? upDateAnimalsClean : upDateAnimalsClean.filter((animal) => animal.type === theFilter));
   }
 
-  function sortByName(a, b) {
-    if (a.animalName > b.animalName) {
-      return 1;
+  function changeStatus(index) {
+    setUpDateAnimalsClean(function (oldList) {
+      const newList = [...oldList];
+      newList[index] = { ...oldList[index] };
+      newList[index].star = !newList[index].star;
+      console.log(newList);
+      return newList;
+    });
+  }
+
+  function sorting(e) {
+    let direction = 1;
+    if (e.currentTarget.dataset.sortDirection === "asc") {
+      e.target.dataset.sortDirection = "desc";
+      direction = -1;
     } else {
-      return -1;
+      e.target.dataset.sortDirection = "asc";
+      direction = 1;
+    }
+    setDisplayList([...displayList].sort(sortByName));
+
+    function sortByName(a, b) {
+      if (a.animalName > b.animalName) {
+        return 1 * direction;
+      } else {
+        return -1 * direction;
+      }
     }
   }
+
+  const animalsMap = displayList.map((animal) => <Animal key={animal.id} {...animal} changeStatus={changeStatus} />);
 
   return (
     <>
       <h1>Animals</h1>
-      <Filter myFunction={(theFilter) => setDisplayList(theFilter === "*" ? animalsClean : animalsClean.filter((animal) => animal.type === theFilter))} />
+      <Filter filterClick={filterClick} />
       <table id="list">
         <thead>
           <tr>
